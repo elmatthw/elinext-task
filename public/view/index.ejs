@@ -5,43 +5,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <title>Archives</title>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     </head>
 
     <body>
-            <!-- <form method="post" enctype="multipart/form-data"> -->
+            <form method="post" enctype="multipart/form-data">
             <input type="file" name="filetoupload"><br>
             <button class = 'btn-submit'>Submit</button>
-            <!-- </form> -->
+            </form>
     </body>
 
     <script>
 
 $('button.btn-submit').on('click', function(event){
-            console.log('here');
+    console.log('here');
             event.preventDefault();
             event.stopPropagation();
-            $.ajax({
-                type: 'POST',
-                url: '/save',
-                cache: false,
-                data: $('input[type="file"]')[0].files,
-                contentType: 'multipart/form-data',
-                success: function(data){
-                    console.log('uploaded')
-                },
-                nocontent: function(data){
-                    console.log('no content')
-                },
-                error: function(data){
-                    console.log(data.error);
+            var file = $('input[type="file"]')[0].files[0];
+            var formData = new FormData();
+            formData.append('archive', file, file.name)
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/save', true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('uploaded');
+                } else {
+                    alert('An error occurred!');
                 }
-            })
+            };
+            xhr.send(formData);
         })
-    /* $(document).on('ready', function(){
-        
-    }) */
         
     
 
