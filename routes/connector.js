@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const MongoClient = require('mongodb').MongoClient
 const fastifyPlugin = require('fastify-plugin');
 
 async function dbConnector(fastify, options){
@@ -7,6 +7,8 @@ async function dbConnector(fastify, options){
 
     const db = await MongoClient.connect(url, options);
     fastify.decorate('mongo', db);
+
+    
 }
 
 module.exports = fastifyPlugin(dbConnector);
