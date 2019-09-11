@@ -1,0 +1,15 @@
+{
+  "name": "elinext-task",
+  "version": "1.0.0",
+  "description": "a REST API service which will upload and store archived text documents",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alena Kulinich",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^2.8.0",
+    "fastify-plugin": "^1.6.0"
+  }
+}
