@@ -5,13 +5,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <title>Archives</title>
-
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     </head>
 
     <body>
-            <form action="/save" method="post" enctype="multipart/form-data">
+            <!-- <form method="post" enctype="multipart/form-data"> -->
             <input type="file" name="filetoupload"><br>
-            <input class = 'btn-submit' type="submit">
-            </form>
+            <button class = 'btn-submit'>Submit</button>
+            <!-- </form> -->
     </body>
+
+    <script>
+
+$('button.btn-submit').on('click', function(event){
+            console.log('here');
+            event.preventDefault();
+            event.stopPropagation();
+            $.ajax({
+                type: 'POST',
+                url: '/save',
+                cache: false,
+                data: $('input[type="file"]')[0].files,
+                contentType: 'multipart/form-data',
+                success: function(data){
+                    console.log('uploaded')
+                },
+                nocontent: function(data){
+                    console.log('no content')
+                },
+                error: function(data){
+                    console.log(data.error);
+                }
+            })
+        })
+    /* $(document).on('ready', function(){
+        
+    }) */
+        
+    
+
+    </script>
 </html>

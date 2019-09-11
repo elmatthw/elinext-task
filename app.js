@@ -6,7 +6,7 @@ const path = require('path');
 fastify.register(require('./routes/connector'), {
     url: 'mongodb://localhost:27017/elinext'
 })
-fastify.register((require('./routes/data.js')))
+fastify.register(require('./routes/data.js'))
 fastify.register(require('point-of-view'), {
     engine: {
         ejs: require('ejs')
