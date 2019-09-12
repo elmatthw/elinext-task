@@ -22,8 +22,6 @@ async function routes(fastify, options) {
         }
     })
 
-<<<<<<< Updated upstream
-=======
 
     fastify.post('/insert-into-database', async(request, reply) => {
         await saveArchive(request.body);
@@ -46,7 +44,6 @@ async function routes(fastify, options) {
         );
     })
 
->>>>>>> Stashed changes
     async function saveArchive(json){
         return await collection.insertOne(json, function(err, res) {
           if (err)
