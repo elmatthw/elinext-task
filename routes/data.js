@@ -22,6 +22,31 @@ async function routes(fastify, options) {
         }
     })
 
+<<<<<<< Updated upstream
+=======
+
+    fastify.post('/insert-into-database', async(request, reply) => {
+        await saveArchive(request.body);
+        reply.send({message: "200"});
+    })
+
+    fastify.get('/archives', async(request, reply) => {
+        reply.view('/archives.ejs')
+    })
+
+    fastify.get('/all-archives', async(request, reply) => {
+        var archives = await getArchives().then(
+            result => {
+                console.log(result);
+                reply.send({archives: result})
+            },
+            error => {
+                reply.code(500).send({message: `error: ${error}`})
+            }
+        );
+    })
+
+>>>>>>> Stashed changes
     async function saveArchive(json){
         return await collection.insertOne(json, function(err, res) {
           if (err)

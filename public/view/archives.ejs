@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>List of Archives</title>
+        
+        <% include ./partials/header.ejs %>
+        <div id = "demo">
+            <div class="data-container">
+
+            </div>
+        </div>
+        
+
+        </div>        
+
+    </body>
+
+    <script>
+        $(document).ready(function(){
+
+            $.ajax({    
+                type: 'GET',
+                url: '/archives',
+                cache: false,
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                complete: function(data){
+                    $.ajax({
+                        type: 'GET',
+                        url: '/all-archives',
+                        cache: false,
+                        dataType: "json",
+                        contentType: "application/json; charset=UTF-8",
+                        success: function(data){
+                            $('#demo').pagination({
+                                dataSource: data.archives,
+                                pageSize: 5,
+                                showPageNumbers: false,
+                                showNavigator: true,
+                                callback: function(data, pagination) {
+                                    $('div.data-container').empty();
+                                    console.log(data);
+                                    data.forEach(element => {
+                                        $('div.data-container').append(element.title + '<br>' + element.description);
+                                        $('div.data-container').append('<br><button>More</button><br><br>')
+                                    });
+                                    /* var html = template(data);
+                                    dataContainer.html(html); */
+                                }
+                            })
+                        }
+                    })
+                },
+                error: function(data){
+
+                }
+            })
+        })
+    </script>
+</html>
