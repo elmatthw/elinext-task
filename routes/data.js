@@ -31,11 +31,34 @@ async function routes(fastify, options) {
         reply.view('/archives.ejs')
     })
 
+    fastify.get('/all-archives', async(request, reply) => {
+        //var archives = new Promise(function(re))
+        var archives = await getArchives().then(
+            result => {
+                console.log(result);
+                reply.send({archives: result})
+            },
+            error => {
+                reply.code(500).send({message: 'error'})
+            }
+        );
+    })
+
     async function saveArchive(json){
         return await collection.insertOne(json, function(err, res) {
           if (err)
             throw err;
         });
+    }
+
+    async function getArchives(){
+        return new Promise(function(resolve, reject){
+            collection.find({}).toArray(function(err, res){
+                if (err)
+                    throw err;
+                resolve(res);
+            })
+        })
     }
 
     fastify.get('/', async(request, reply) => {
