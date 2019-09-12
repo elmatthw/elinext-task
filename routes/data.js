@@ -3,7 +3,7 @@ const concat = require('concat-stream')
 const pump = require('pump')
 
 async function routes(fastify, options) {
-    const database = fastify.mongo.db('db')
+    const database = fastify.mongo.db('elinext')
     const collection = database.collection('archives')
     fastify.register(require('fastify-multipart'))
     
@@ -17,7 +17,6 @@ async function routes(fastify, options) {
         })
       
         async function handler (field, file, filename, encoding, mimetype) {
-          await saveArchive({title: filename, description: 'nice', expire: new Date("<2020-12-22T08:00:00Z>")})
           pump(file, fs.createWriteStream('./storage/' + filename))
         }
     })
@@ -33,13 +32,21 @@ async function routes(fastify, options) {
     })
 
     fastify.get('/all-archives', async(request, reply) => {
+<<<<<<< HEAD
+=======
+        //var archives = new Promise(function(re))
+>>>>>>> mongo-interaction
         var archives = await getArchives().then(
             result => {
                 console.log(result);
                 reply.send({archives: result})
             },
             error => {
+<<<<<<< HEAD
                 reply.code(500).send({message: `error: ${error}`})
+=======
+                reply.code(500).send({message: 'error'})
+>>>>>>> mongo-interaction
             }
         );
     })
@@ -48,9 +55,17 @@ async function routes(fastify, options) {
         return await collection.insertOne(json, function(err, res) {
           if (err)
             throw err;
-          console.log('one document inserted')
-          console.log(res);
         });
+    }
+
+    async function getArchives(){
+        return new Promise(function(resolve, reject){
+            collection.find({}).toArray(function(err, res){
+                if (err)
+                    throw err;
+                resolve(res);
+            })
+        })
     }
 
     fastify.get('/', async(request, reply) => {
