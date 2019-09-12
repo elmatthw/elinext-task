@@ -32,21 +32,13 @@ async function routes(fastify, options) {
     })
 
     fastify.get('/all-archives', async(request, reply) => {
-<<<<<<< HEAD
-=======
-        //var archives = new Promise(function(re))
->>>>>>> mongo-interaction
         var archives = await getArchives().then(
             result => {
                 console.log(result);
                 reply.send({archives: result})
             },
             error => {
-<<<<<<< HEAD
                 reply.code(500).send({message: `error: ${error}`})
-=======
-                reply.code(500).send({message: 'error'})
->>>>>>> mongo-interaction
             }
         );
     })
