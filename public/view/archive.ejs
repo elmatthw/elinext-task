@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>List of Archives</title>
+        
+        <% include ./partials/header.ejs %>
+        <div>
+
+        </div>
+        <label>See first <input type="text"> lines of text in the archive</label><br>
+        <button>See</button>
+        <label class="result"></label>
+
+
+    </body>
+
+    <script>
+    $(document).ready(function(){
+        $.urlParam = function(name) {
+            var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (!results) {
+                return 0;
+            }
+            return results[1] || 0;
+        };
+
+
+        $.ajax({
+            type: 'GET',
+            url: 'archive/?id=' + $.urlParam('id'),
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            success: function(data){
+                $.ajax({
+                    type: 'GET',
+                    url: 'archive',
+                    dataType: "json",
+                    contentType: "application/json; charset=UTF-8"
+                })
+                $('div').append(data.title + '<br>' + data.description);
+            
+            }
+        })
+    })
+
+    </script>
+</html>
