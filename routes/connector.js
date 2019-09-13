@@ -7,8 +7,6 @@ async function dbConnector(fastify, options){
 
     const db = await MongoClient.connect(url, options);
     fastify.decorate('mongo', db);
-
-    
 }
 
-module.exports = fastifyPlugin(dbConnector);
+module.exports = dbConnector;
