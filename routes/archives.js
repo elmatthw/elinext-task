@@ -1,10 +1,10 @@
-async function app_routing(fastify, options){
-    fastify.register(require('./data'));
+/* const router = require('express').Router();
+const data = require('./data')
 
-    fastify.post('/insert-into-database', async(request, reply) => {
-        await routes.saveArchive(request.body);
-        reply.send({message: "200"});
-    })
-}
+router.post('/insert-into-database', async(request, response) => {
+    await data.saveArchive(request.body);
+    response.json({message: "200"});
+})
 
-module.exports = app_routing;
+
+module.exports = router; */

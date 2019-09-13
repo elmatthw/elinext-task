@@ -1,11 +1,11 @@
 const router = require('express').Router()
 const fs = require('fs')
 const pump = require('pump')
+const Archive = require('../model')
 const dbName = 'elinext';
 
 //const collection = database.collection('archives')
 
-var ObjectId = new require('mongodb').ObjectId
 //fastify.register(require('fastify-multipart'))
 
 /* fastify.post('/save', async (request, response) => {
@@ -34,10 +34,10 @@ router.get('/archive', async(request, response) => {
 })
 
 router.get('/archive/:id', async(request, response) => {
-    var connection = request.db;
-    
+    console.log('here in get')
     let id = request.query.id
-    await getArchiveById(connection, id.toString()).then(
+    console.log(id)
+    await getArchiveById(id.toString()).then(
         result => {
             response.json(result);        
         },
@@ -49,7 +49,8 @@ router.get('/archive/:id', async(request, response) => {
 })
 
 router.get('/all-archives', async(request, response) => {
-    var archives = await getArchives(request.db).then(
+    var connection = request.db;
+    var archives = await getArchives(connection).then(
         result => {
             console.log(result);
             response.json({archives: result})
@@ -60,12 +61,14 @@ router.get('/all-archives', async(request, response) => {
     );
 })
 
-async function getArchiveById(connection, id){
+async function getArchiveById(id){
+    console.log('here');
     return new Promise(function(resolve, reject){
-        connection.db(dbName).collection.findOne({_id: ObjectId(id)}, function(err, res){
+        Archive.findById(id, function(err, doc) {
             if (err)
                 throw err;
-            resolve(res);
+            console.log(doc);
+            resolve(doc);
         })
     })
 }
