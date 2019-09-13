@@ -32,7 +32,11 @@ async function routes(fastify, options) {
         reply.view('/archives.ejs')
     })
 
-    fastify.get('/archive:id', async(request, reply) => {
+    fastify.get('/archive', async(request, reply) => {
+        reply.view('/archive.ejs');
+    })
+
+    fastify.get('/archive/:id', async(request, reply) => {
         let id = request.query.id
         await getArchiveById(id.toString()).then(
             result => {
