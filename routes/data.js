@@ -1,6 +1,7 @@
 const fs = require('fs')
 const concat = require('concat-stream')
 const pump = require('pump')
+var ObjectId = new require('mongodb').ObjectId
 
 async function routes(fastify, options) {
     const database = fastify.mongo.db('elinext')
@@ -31,6 +32,23 @@ async function routes(fastify, options) {
         reply.view('/archives.ejs')
     })
 
+    fastify.get('/archive', async(request, reply) => {
+        reply.view('/archive.ejs');
+    })
+
+    fastify.get('/archive/:id', async(request, reply) => {
+        let id = request.query.id
+        await getArchiveById(id.toString()).then(
+            result => {
+                reply.send(result);        
+            },
+            error => {
+                reply.send(`error: ${error}`);
+            }
+        )
+        
+    })
+
     fastify.get('/all-archives', async(request, reply) => {
         var archives = await getArchives().then(
             result => {
@@ -42,6 +60,16 @@ async function routes(fastify, options) {
             }
         );
     })
+
+    async function getArchiveById(id){
+        return new Promise(function(resolve, reject){
+            collection.findOne({_id: ObjectId(id)}, function(err, res){
+                if (err)
+                    throw err;
+                resolve(res);
+            })
+        })
+    }
 
     async function saveArchive(json){
         return await collection.insertOne(json, function(err, res) {
