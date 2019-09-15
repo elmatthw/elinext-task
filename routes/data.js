@@ -13,7 +13,7 @@ router.use(cors());
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({ extended: true }));
 
-router.post('/save', async(req, res) => {
+router.post('/save', async(req, res, next) => {
     try {
         if(!req.files) {
             res.send({
@@ -40,14 +40,18 @@ router.post('/save', async(req, res) => {
     }
 })
 
-router.post('/insert-into-database', async(request, response) => {
+router.post('/insert-into-database', async(request, response, next) => {
     let archive = new Archive({
         title: request.body.title,
         description: request.body.description,
         expire: request.body.expire
     })
-    await saveArchive(archive);
-    response.json({message: "200"});
+    saveArchive(archive).then(
+        onfullfilled => {
+            response.json({message: "200"});
+        }
+    )  
+    //response.json({message: "200"});
 })
 
 router.get('/archives', function(request, response, next) {
@@ -88,22 +92,19 @@ async function getArchiveById(id){
         Archive.findById(id, function(err, doc) {
             if (err)
                 throw err;
-            console.log(doc);
-            resolve(doc);
+            resolve(doc)
+            
         })
     })
 }
 
 async function saveArchive(archive){
-    return new Promise(function(reject, resolve){
-        archive.save(function(err){
-            if (err) {
-                console.log(err);
-                throw err;
-            }
-                
-            console.log('saved to db');
-        })
+    archive.save(function(err){
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        console.log('saved to db');
     })
 }
 
