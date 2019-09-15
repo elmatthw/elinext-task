@@ -1,10 +1,27 @@
-$('button.btn-submit').on('click', function(event){
+$('button').on('click', function(event){
     event.preventDefault();
     event.stopPropagation();
+    /* $('#status').empty().text('uploading...')
+    $(this).ajaxSubmit({
+        type: "POST",
+        url: '/save',
+        error: function(xhr) {
+            status('Error: ' + xhr.status);
+                },
+    
+                success: function(response) {
+            $("#status").empty().text(response);
+                    console.log(response);
+                }
+        
+    })
+    return false; */
     var file = $('input[type="file"]')[0].files[0];
+    console.log(file);
     var formData = new FormData();
     formData.append('archive', file, file.name)
     var xhr = new XMLHttpRequest();
+    console.log(formData);
     xhr.open('POST', '/save', true);
 
     xhr.onload = function () {

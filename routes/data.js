@@ -1,42 +1,65 @@
-const router = require('express').Router()
-const fs = require('fs')
-const pump = require('pump')
+const express = require('express') 
+const router = express.Router()
+const fileUpload = require('express-fileupload');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const Archive = require('../model')
-const dbName = 'elinext';
 
-//const collection = database.collection('archives')
+router.use(fileUpload({
+    createParentPath: true
+}));
 
-//fastify.register(require('fastify-multipart'))
+router.use(cors());
+router.use(bodyParser.json())
+router.use(bodyParser.urlencoded({ extended: true }));
 
-/* fastify.post('/save', async (request, response) => {
-    const mp = request.multipart(handler, function (err) {
-    
-    response.code(200).send()
-    })
-    mp.on('field', function (key, value) {
-        console.log('form-data', key, value)
-    })
-    
-    async function handler (field, file, filename, encoding, mimetype) {
-        pump(file, fs.createWriteStream('./storage/' + filename))
+router.post('/save', async(req, res) => {
+    try {
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file uploaded'
+            });
+        } else {
+
+            let archive = req.files.archive;
+            archive.mv('./storage/' + archive.name);
+            res.send({
+                status: true,
+                message: 'File is uploaded',
+                data: {
+                    name: archive.name,
+                    mimetype: archive.mimetype,
+                    size: archive.size
+                }
+            });
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).send(err);
     }
-}) */
+})
 
+router.post('/insert-into-database', async(request, response) => {
+    let archive = new Archive({
+        title: request.body.title,
+        description: request.body.description,
+        expire: request.body.expire
+    })
+    await saveArchive(archive);
+    response.json({message: "200"});
+})
 
-
-
-router.get('/archives', async(request, response) => {
-    response.render('archives.ejs')
+router.get('/archives', function(request, response, next) {
+    return response.render('archives.ejs')
 })
 
 router.get('/archive', async(request, response) => {
     response.render('archive.ejs');
 })
 
-router.get('/archive/:id', async(request, response) => {
-    console.log('here in get')
+router.get('/get-archive', async(request, response) => {
     let id = request.query.id
-    console.log(id)
     await getArchiveById(id.toString()).then(
         result => {
             response.json(result);        
@@ -48,22 +71,20 @@ router.get('/archive/:id', async(request, response) => {
     
 })
 
-router.get('/all-archives', async(request, response) => {
-    var connection = request.db;
-    var archives = await getArchives(connection).then(
+router.get('/all-archives', async (request, response, next) => {
+    var archives = await getArchives().then(
         result => {
             console.log(result);
-            response.json({archives: result})
+            return response.json({archives: result})
         },
         error => {
-            response.send({message: `error: ${error}`})
+            return response.json({message: `error: ${error}`})
         }
     );
 })
 
 async function getArchiveById(id){
-    console.log('here');
-    return new Promise(function(resolve, reject){
+    return await new Promise(function(resolve, reject){
         Archive.findById(id, function(err, doc) {
             if (err)
                 throw err;
@@ -73,20 +94,25 @@ async function getArchiveById(id){
     })
 }
 
-async function saveArchive(json){
-    return await collection.insertOne(json, function(err, res) {
-        if (err)
-        throw err;
-    });
+async function saveArchive(archive){
+    return new Promise(function(reject, resolve){
+        archive.save(function(err){
+            if (err) {
+                console.log(err);
+                throw err;
+            }
+                
+            console.log('saved to db');
+        })
+    })
 }
 
-async function getArchives(connection){
+async function getArchives(){
     return new Promise(function(resolve, reject){
-        connection.db(dbName).collection.find({}).toArray(function(err, res){
+        Archive.find({}, function(err, doc) {
             if (err)
                 throw err;
-            console.log(res);
-            resolve(res);
+            resolve(doc);
         })
     })
 }

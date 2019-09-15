@@ -8,16 +8,18 @@
         
 <% include partials/header.ejs %>
 
-        <form method="post" enctype="multipart/form-data">
-        <input type="file" name="filetoupload" accept=".gz"><br>
+        <form method="post" enctype="multipart/form-data" name="filetoupload">
+        <input type="file" name="filetoupload" ><br>
         <input type="text" placeholder="Description" class="description">
         <input placeholder="Expire Date" class="expireDate">
         <input placeholder="Expire Time" class="expireTime">
+        <!-- <input type="submit"> -->
+        <span id = "status"></span>
         <button class = 'btn-submit'>Submit</button>
         
         <div class="status"></div>
         </form>
     </body>
-
-    <script src="js/index.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+    <script src="/js/index.js"></script>
 </html>

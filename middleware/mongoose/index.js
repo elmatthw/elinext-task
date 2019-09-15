@@ -10,7 +10,7 @@ const mongooseConnect = function() {
         useNewUrlParser: true})
   }
 
-  mongoose.Promise = Promise;
+ /*  mongoose.Promise = global.Promise; */
 
   mongoose.connection.on('error', function(){
       mongoose.disconnect();

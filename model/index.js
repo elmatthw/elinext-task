@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 var ArchiveSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     title: {
         type: String,
         required: [true, 'Title required']
@@ -10,4 +9,4 @@ var ArchiveSchema = new mongoose.Schema({
     expire: Date
 })
 
-module.exports = mongoose.model('Archive', ArchiveSchema)
+module.exports = mongoose.model('archive', ArchiveSchema)

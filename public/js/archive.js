@@ -6,22 +6,19 @@ $(document).ready(function(){
         }
         return results[1] || 0;
     };
-
-
     $.ajax({
         type: 'GET',
-        url: 'archive/?id=' + $.urlParam('id'),
+        url: '/get-archive/?id=' + $.urlParam('id'),
         dataType: "json",
         contentType: "application/json; charset=UTF-8",
         success: function(data){
             $.ajax({
                 type: 'GET',
-                url: 'archive',
+                url: '/archive',
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8"
             })
             $('div').append(data.title + '<br>' + data.description);
-        
         }
     })
 })
