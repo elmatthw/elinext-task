@@ -9,7 +9,7 @@ $(document).ready(function(){
         complete: function(data){
             $.ajax({
                 type: 'GET',
-                url: '/all-archives',
+                url: '/archives/all',
                 cache: false,
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8",

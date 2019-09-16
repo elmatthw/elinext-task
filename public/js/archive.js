@@ -8,13 +8,13 @@ $(document).ready(function(){
     };
     $.ajax({
         type: 'GET',
-        url: '/get-archive/?id=' + $.urlParam('id'),
+        url: 'archives/archive/get/?id=' + $.urlParam('id'),
         dataType: "json",
         contentType: "application/json; charset=UTF-8",
         success: function(data){
             $.ajax({
                 type: 'GET',
-                url: '/archive',
+                url: '/archives/archive',
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8"
             })
