@@ -117,7 +117,7 @@ function readLines(archive, number_lines){
         stream.resume()
     })
     extract.on('finish', function() {
-        console.log('finished')
+        return lines;
     })
     fs.createReadStream("./storage/" + archive.title)
         .pipe(zlib.createGunzip())
