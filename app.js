@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('./middleware/mongoose')
 const app = express();
-
+const expiration = require('./expiration')
 const morgan = require('morgan');
 
 app.use(bodyParser.json())
@@ -18,7 +18,10 @@ app.set('views', path.join(__dirname, '/public/view'))
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms')); 
 //app.use(mongoose.checkState)
+app.use(expiration.findExpired, expiration.findClosestToExpire)
 app.use(require('./routes/data.js'))
+
+/* app.use() */
 //app.use(require('./routes/archives.js'))
 
 var server = app.listen(3000, () => {
