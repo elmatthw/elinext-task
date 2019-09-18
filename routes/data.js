@@ -79,9 +79,8 @@ router.get('/archives/archive/get', async(request, response) => {
 })
 
 router.get('/archives/all', async (request, response, next) => {
-    var archives = await getArchives().then(
+    await getArchives().then(
         result => {
-            console.log(result);
             return response.json({archives: result})
         },
         error => {
@@ -97,7 +96,7 @@ router.get('/archives/archive/getlines', async(req, res) => {
     await getArchiveById(id).then(
         async function(result) {
             lines = await readLines(result, lineNumber)
-            res.json({lines});        
+            res.json({lines});    
         },
         error => {
             res.send(`error: ${error}`);
@@ -106,37 +105,45 @@ router.get('/archives/archive/getlines', async(req, res) => {
 })
 
 async function readLines(archive, numberLines){
-    return await new Promise(function(resolve, reject){
-        var extract = tar.extract()
-        let line_no = 0,
-            lines = []
-        extract.on('entry', function(header, stream, next) {
-            let rl = readline.createInterface({
-                input: stream
-            })
-            rl.on('line', function(line){
-                line_no++
-                lines.push(line);
-                if (line_no == numberLines) {
-                    rl.pause()
-                    rl.close()
-                    rl.removeAllListeners()
+    return new Promise(function(resolve, reject){
+        try {
+            var extract = tar.extract()
+            let line_no = 0,
+                lines = []
+            extract.on('entry', function(header, stream, next) {
+                let rl = readline.createInterface({
+                    input: stream
+                })
+                rl.on('line', function(line){
+                    line_no++
+                    lines.push(line);
+                    if (line_no == numberLines) {
+                        rl.pause()
+                        rl.close()
+                        rl.removeAllListeners()
+                        resolve(lines)
+                    }
+                })
+
+                stream.on('end', function() {
+                    next()
+                })
+
+                stream.on('finish', function(){
                     resolve(lines)
-                }
-            })
+                })
 
-            stream.on('end', function() {
-                next()
+                stream.resume()
             })
-
-            stream.resume()
-        })
-    
-        fs.createReadStream("./storage/" + archive.title)
-            .pipe(zlib.createGunzip())
-            .pipe(extract);
-        })
-    
+        
+            fs.createReadStream("./storage/" + archive.title)
+                .pipe(zlib.createGunzip())
+                .pipe(extract);
+            }
+         catch(err) {
+            reject(err)
+        }
+    })
 }
 
 async function getArchiveById(id){

@@ -30,7 +30,7 @@ $(document).ready(function(){
                                 event.stopPropagation();
 
                                 let id = this.getAttribute('id');
-                                window.location='/archives/archive/get?id=' + id;
+                                window.location='archives/archive?id=' + id;
                             })
                             /* var html = template(data);
                             dataContainer.html(html); */
