@@ -7,10 +7,9 @@ const mongooseConnect = function() {
              auto_reconnect: true 
             }, 
         useUnifiedTopology: true,
-        useNewUrlParser: true})
+        useNewUrlParser: true,
+        useFindAndModify: false})
   }
-
- /*  mongoose.Promise = global.Promise; */
 
   mongoose.connection.on('error', function(){
       mongoose.disconnect();
@@ -21,15 +20,3 @@ const mongooseConnect = function() {
   })
 
   mongooseConnect()
-
-  exports.checkState = function(req, res, next){
-      if (mongoose.connect.readyState != 1) {
-          mongooseConnect()
-          next()
-          /* var err = new Error("Database connection not established");
-          err.status = 500;
-          next(err) */
-      }
-
-      next()
-  }

@@ -1,6 +1,6 @@
 const fs = require('fs')
-const Archive = require('./model')
-
+const Archive = require('../../model')
+const data = require('../../controller/data')
 const queueMap = new Map()
 
 function archiveIsInQueue(id){
@@ -49,18 +49,10 @@ async function deleteArchive(archives) {
     try {
         archives.forEach(function(archive) {
             fs.unlinkSync('./storage/' + archive.title)
-            deleteArchiveFromDatabase(archive._id)
+            data.deleteArchiveFromDatabase(archive._id)
         })
     }
     catch (err) {
         console.log(err)
     }
-}
-
-async function deleteArchiveFromDatabase(id){
-    Archive.findByIdAndRemove(id, function(err, data){
-        if (!err) {
-            console.log('deleted')
-        }
-    })
 }

@@ -1,21 +1,6 @@
 $('button').on('click', function(event){
     event.preventDefault();
     event.stopPropagation();
-    /* $('#status').empty().text('uploading...')
-    $(this).ajaxSubmit({
-        type: "POST",
-        url: '/save',
-        error: function(xhr) {
-            status('Error: ' + xhr.status);
-                },
-    
-                success: function(response) {
-            $("#status").empty().text(response);
-                    console.log(response);
-                }
-        
-    })
-    return false; */
     var file = $('input[type="file"]')[0].files[0];
     console.log(file);
     var formData = new FormData();
@@ -23,7 +8,6 @@ $('button').on('click', function(event){
     var xhr = new XMLHttpRequest();
     console.log(formData);
     xhr.open('POST', '/save', true);
-
     xhr.onload = function () {
         if (xhr.status === 200) {
             insertIntoDatabase(file.name, $('.description').val(), $('.expireDate').val(), $('.expireTime').val())
