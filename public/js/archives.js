@@ -9,7 +9,7 @@ $(document).ready(function(){
         complete: function(data){
             $.ajax({
                 type: 'GET',
-                url: '/all-archives',
+                url: '/archives/all',
                 cache: false,
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8",
@@ -30,7 +30,7 @@ $(document).ready(function(){
                                 event.stopPropagation();
 
                                 let id = this.getAttribute('id');
-                                window.location='archive?id=' + id;
+                                window.location='archives/archive?id=' + id;
                             })
                             /* var html = template(data);
                             dataContainer.html(html); */

@@ -8,17 +8,37 @@ $(document).ready(function(){
     };
     $.ajax({
         type: 'GET',
-        url: '/get-archive/?id=' + $.urlParam('id'),
+        url: '/archives/archive/get?id=' + $.urlParam('id'),
         dataType: "json",
         contentType: "application/json; charset=UTF-8",
         success: function(data){
             $.ajax({
                 type: 'GET',
-                url: '/archive',
+                url: '/archives/archive',
                 dataType: "json",
                 contentType: "application/json; charset=UTF-8"
             })
-            $('div').append(data.title + '<br>' + data.description);
+            $('div.archive').append(data.title + '<br>' + data.description);
         }
+    })
+
+    $('#seeLines').on('click', function(event) {
+        event.preventDefault()
+        event.stopPropagation()
+        let line_number = $('#lines').val()
+        $.ajax({
+            type: 'GET',
+            url: '/archives/archive/getlines?id=' + $.urlParam('id') + '&lines=' + line_number,
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            success: function(data){
+                data.lines.forEach(function(line) {
+                    $('div.result').append(line + '<br>')
+                });
+            },
+            error: function(data){
+                $('div.result').append(data.error)
+            }
+        })
     })
 })
