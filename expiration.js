@@ -1,12 +1,9 @@
 const fs = require('fs')
 const Archive = require('./model')
 
-console.log('required')
-
 const queueMap = new Map()
 
 function archiveIsInQueue(id){
-    console.log(queueMap.has(id))
     return queueMap.has(id)
 }
 
@@ -20,14 +17,7 @@ exports.findExpired = function(req, res, next){
         exec(async function(err, archives){
             console.log(archives)
             await deleteArchive(archives);
-            /* Promise.all(
-                archives.map(async function(archive) {
-                        
-                    }
-                )
-            ) */
         })
-
     next()
 }
 
@@ -46,25 +36,18 @@ exports.findClosestToExpire = function(req, res, next){
                 select('_id title expire').
                 exec(function(err, archives) {
                     if (archives) {
-                        var timeoutId = setTimeout(deleteArchive, new Date(closestDate) - new Date(), archives)
-                        console.log('timeout is set ' + timeoutId)
                         archives.forEach(function(archive) {
-                            console.log(queueMap.entries())
-                            if (!archiveIsInQueue(archive._id)) {
-                                queueMap.set(archive._id, timeoutId)    
-                                console.log('another timeout added')
+                            if (!archiveIsInQueue(archive._id.toString())) {
+                                var timeoutId = setTimeout(deleteArchive, new Date(closestDate) - new Date(), archives)
+                                queueMap.set(archive._id.toString(), timeoutId)    
                             }
-
                         });
                     }
                 })
         })
-
     next()
 }
  
-// TODO: make delete more effective: NOT deleting one element from database at a time
-
 async function deleteArchive(archives) {
     try {
         archives.forEach(function(archive) {
