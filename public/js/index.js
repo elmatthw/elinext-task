@@ -2,17 +2,16 @@ $('button').on('click', function(event){
     event.preventDefault();
     event.stopPropagation();
     var file = $('input[type="file"]')[0].files[0];
-    console.log(file);
     var formData = new FormData();
     formData.append('archive', file, file.name)
     var xhr = new XMLHttpRequest();
-    console.log(formData);
     xhr.open('POST', '/save', true);
     xhr.onload = function () {
-        if (xhr.status === 200) {
+        var received = JSON.parse(xhr.response)
+        if (received.status === true) {
             insertIntoDatabase(file.name, $('.description').val(), $('.expireDate').val(), $('.expireTime').val())
         } else {
-            alert('An error occurred!');
+            $('div.status').append(received.error);
         }
     };
     xhr.send(formData);
@@ -26,16 +25,19 @@ $(document).ready(function(){
 })
 
 function insertIntoDatabase(title, description, date, time){
-    var expire = new Date(date + " " + time).toISOString();
+    //var expire = new Date(date + " " + time).toISOString();
     $.ajax({
         type: 'POST',
         url: '/insert-into-database',
         cache: false,
-        data: JSON.stringify({title, description, expire}),
+        data: JSON.stringify({title, description, date, time}),
         dataType: "json",
         contentType: "application/json; charset=UTF-8",
         success: function(data){
-            $('div.status').append('Archive saved successfully');
+            if (!data.error)
+                $('div.status').append('Archive saved successfully');
+            else
+                $('div.status').append(data.error);
         },
         error: function(data){
             $('div.status').append('Error');

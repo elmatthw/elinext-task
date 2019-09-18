@@ -1,5 +1,6 @@
 const data = require('./data')
 const readlines = require('./readlines')
+const validator = require('./validation')
 
 exports.index = function(request, response, next) {
     return response.render('archives.ejs')
@@ -36,13 +37,20 @@ exports.getLines = async(req, res) => {
     let lineNumber = req.query.lines,
         id = req.query.id,
         lines = []
-    await data.getArchiveById(id).then(
-        async function(result) {
-            lines = await readlines.lines(result, lineNumber)
-            res.json({lines});    
-        },
-        error => {
-            res.send(`error: ${error}`);
-        }
-    )
+    if (validator.isValidNumberOfLines(lineNumber)) {
+        await data.getArchiveById(id).then(
+            async function(result) {
+                lines = await readlines.lines(result, lineNumber)
+                res.json({lines});    
+            }
+        ).catch(
+            error => {
+                throw error;
+                //res.send(`error: ${error}`);
+            }
+        )
+    }
+    else
+        res.send({error: 'Invalid number of lines'})
+    
 }

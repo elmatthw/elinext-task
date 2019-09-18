@@ -32,9 +32,14 @@ $(document).ready(function(){
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             success: function(data){
-                data.lines.forEach(function(line) {
-                    $('div.result').append(line + '<br>')
-                });
+                if (!data.error) {
+                    data.lines.forEach(function(line) {
+                        $('div.result').append(line + '<br>')
+                    });
+                }
+                else
+                $('div.result').append(data.error)
+                
             },
             error: function(data){
                 $('div.result').append(data.error)
