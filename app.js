@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('./middleware/mongoose')
 const app = express();
-const expiration = require('./expiration')
+const expiration = require('./middleware/expiration')
 const morgan = require('morgan');
 
 app.use(bodyParser.json())
