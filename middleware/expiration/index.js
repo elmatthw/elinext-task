@@ -8,21 +8,18 @@ function archiveIsInQueue(id){
 }
 
 exports.findExpired = function(req, res, next){
-    console.log('in expired')
     Archive.
         find({}).
         where('expire').lte(new Date().toISOString()).
         sort({expire: -1 }).
         select('_id title expire').
         exec(async function(err, archives){
-            console.log(archives)
             await deleteArchive(archives);
         })
     next()
 }
 
 exports.findClosestToExpire = function(req, res, next){
-    console.log('in closest to expired')
     Archive.
         find({}).
         limit(1).
