@@ -4,7 +4,7 @@ const zlib = require('zlib')
 const readline = require('readline')
 
 exports.lines = async function(archive, numberLines){
-    var lines = new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject){
         try {
             var extract = tar.extract()
             let line_no = 0,
@@ -40,13 +40,7 @@ exports.lines = async function(archive, numberLines){
                 .pipe(extract);
             }
          catch(err) {
-             
             reject(err)
         }
-    }).catch(
-        error => {
-            console.log('WOOPSIE')
-        }
-    )
-    return lines;
+    })
 }
