@@ -15,7 +15,8 @@ exports.all = async (request, response, next) => {
     await data.getArchives(page).then(
         async function(result) {
             archives = result;
-            await data.getAmountOfArchives().then(count => {
+            await data.getAmountOfArchives().then(amount => {
+                let count = Math.ceil(amount/5);
                 response.json({archives, count})
             });
         },

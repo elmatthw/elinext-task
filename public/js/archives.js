@@ -33,15 +33,12 @@ $(document).ready(function(){
                                 page++
                         }
                         else if ($(this).hasClass('prev') && page > 1) {
-                            console.log(page)
                             page--
                         }
                         window.location='/archives?page=' + page
                     })
                     $('div#archives').empty();
-                    console.log(data.archives)
                     data.archives.forEach(function(element) {
-                        console.log('here')
                         $('div#archives').append('<div id="'+element._id + '">' + element.title + '<br>' + element.description + '</div>');
                         $('div#archives').append('<br><button class="more" id="'+element._id + '">More</button><br><br>')
                     });
