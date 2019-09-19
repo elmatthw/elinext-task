@@ -21,12 +21,25 @@ exports.saveArchive = async function(archive){
     })
 }
 
-exports.getArchives = async function(){
+exports.getArchives = async function(page){
     return new Promise(function(resolve, reject){
-        Archive.find({}, function(err, doc) {
+        Archive.find({}).
+            skip((page - 1) * 5).
+            limit(5).
+            exec(function(err, doc) {
             if (err)
                 throw err;
             resolve(doc);
+        })
+    })
+}
+
+exports.getAmountOfArchives = async function(){
+    return new Promise(function(resolve, reject){
+        Archive.countDocuments({}, function(err, count) {
+            if (err)
+                throw err;
+            resolve(count);
         })
     })
 }

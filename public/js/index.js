@@ -25,7 +25,6 @@ $(document).ready(function(){
 })
 
 function insertIntoDatabase(title, description, date, time){
-    //var expire = new Date(date + " " + time).toISOString();
     $.ajax({
         type: 'POST',
         url: '/insert-into-database',

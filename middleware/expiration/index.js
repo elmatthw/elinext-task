@@ -26,21 +26,24 @@ exports.findClosestToExpire = function(req, res, next){
         sort('-expire').
         select('expire').
         exec(function(err, archives){
-            var closestDate = archives[0].expire;
-            Archive.
-                find({}).
-                where('expire').equals(closestDate).
-                select('_id title expire').
-                exec(function(err, archives) {
-                    if (archives) {
-                        archives.forEach(function(archive) {
-                            if (!archiveIsInQueue(archive._id.toString())) {
-                                var timeoutId = setTimeout(deleteArchive, new Date(closestDate) - new Date(), archives)
-                                queueMap.set(archive._id.toString(), timeoutId)    
-                            }
-                        });
-                    }
-                })
+            if (archives.length !== 0) {
+                var closestDate = archives[0].expire;
+                Archive.
+                    find({}).
+                    where('expire').equals(closestDate).
+                    select('_id title expire').
+                    exec(function(err, archives) {
+                        if (archives) {
+                            archives.forEach(function(archive) {
+                                if (new Date(closestDate) - new Date() < Math.pow(2, 31) - 1 && !archiveIsInQueue(archive._id.toString())) {
+                                    var timeoutId = setTimeout(deleteArchive, new Date(closestDate) - new Date(), archives)
+                                    queueMap.set(archive._id.toString(), timeoutId)    
+                                }
+                            });
+                        }
+                    })
+            }
+            
         })
     next()
 }

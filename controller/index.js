@@ -57,7 +57,7 @@ exports.insertIntoDatabase = async(request, response, next) => {
         let archive = new Archive({
             title: request.body.title,
             description: request.body.description,
-            expire: request.body.expire
+            expire: expire
         })
         data.saveArchive(archive).then(
             onfullfilled => {

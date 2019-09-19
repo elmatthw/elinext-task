@@ -7,14 +7,22 @@ exports.index = function(request, response, next) {
 }
 
 exports.all = async (request, response, next) => {
-    await data.getArchives().then(
-        result => {
-            return response.json({archives: result})
+    if (request.query.page)
+        var page = request.query.page;
+    else
+        var page = 1
+    var archives;
+    await data.getArchives(page).then(
+        async function(result) {
+            archives = result;
+            await data.getAmountOfArchives().then(count => {
+                response.json({archives, count})
+            });
         },
         error => {
             return response.json({message: `error: ${error}`})
         }
-    );
+    )
 }
 
 exports.archive = async(request, response) => {
